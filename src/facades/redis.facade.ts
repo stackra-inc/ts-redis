@@ -69,4 +69,4 @@ import { RedisManager } from '@/services/redis-manager.service';
  * RedisFacade.connection();
  * ```
  */
-export const RedisFacade: RedisManager = Facade.make<RedisManager>(RedisManager);
+export const RedisFacade: RedisManager = Facade.make<RedisManager>(RedisManager as any);
