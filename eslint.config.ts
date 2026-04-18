@@ -33,7 +33,7 @@ const config: Linter.Config[] = [
   //   - *.config.js    — JavaScript config files
   //   - *.config.ts    — TypeScript config files (tsup, vitest, etc.)
   {
-    ignores: ['dist/**', 'node_modules/**', '*.config.js', '*.config.ts'],
+    ignores: ['dist/**', 'node_modules/**', '.examples/**', '*.config.js', '*.config.ts'],
   },
 
   // Add package-specific rule overrides here.
