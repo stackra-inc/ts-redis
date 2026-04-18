@@ -26,5 +26,5 @@ import { RedisManager } from '@/services/redis-manager.service';
  * ```
  */
 export function useRedis(): RedisManager {
-  return useInject(RedisManager);
+  return useInject(RedisManager as any);
 }

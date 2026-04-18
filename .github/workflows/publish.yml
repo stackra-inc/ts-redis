@@ -305,94 +305,36 @@ jobs:
                 },
                 {
                   "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "📦 @stackra/ts-redis ${{ needs.validate.outputs.tag }}",
-                    "emoji": true
-                  }
+                  "text": { "type": "plain_text", "text": "📦 @stackra/ts-redis ${{ needs.validate.outputs.tag }}", "emoji": true }
                 },
                 {
                   "type": "section",
                   "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Status:*\n✅ Published"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Release Type:*\n${{ steps.notes.outputs.release_type }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Version:*\n`${{ needs.validate.outputs.version }}`"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commits:*\n${{ steps.notes.outputs.commit_count }} since last release"
-                    }
+                    { "type": "mrkdwn", "text": "*Status:*\n✅ Published" },
+                    { "type": "mrkdwn", "text": "*Release Type:*\n${{ steps.notes.outputs.release_type }}" },
+                    { "type": "mrkdwn", "text": "*Version:*\n`${{ needs.validate.outputs.version }}`" },
+                    { "type": "mrkdwn", "text": "*Commits:*\n${{ steps.notes.outputs.commit_count }} since last release" }
                   ]
                 },
-                {
-                  "type": "divider"
-                },
+                { "type": "divider" },
                 {
                   "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*📋 Release Notes:*\n${{ steps.notes.outputs.notes }}"
-                  }
+                  "text": { "type": "mrkdwn", "text": "*📋 Release Notes:*\n${{ steps.notes.outputs.notes }}" }
                 },
-                {
-                  "type": "divider"
-                },
+                { "type": "divider" },
                 {
                   "type": "actions",
                   "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "📦 npm",
-                        "emoji": true
-                      },
-                      "url": "https://www.npmjs.com/package/@stackra/ts-redis/v/${{ needs.validate.outputs.version }}"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "🏷️ GitHub Release",
-                        "emoji": true
-                      },
-                      "url": "https://github.com/stackra-co/ts-redis/releases/tag/${{ needs.validate.outputs.tag }}"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "📝 Full Changelog",
-                        "emoji": true
-                      },
-                      "url": "https://github.com/stackra-co/ts-redis/blob/main/CHANGELOG.md"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "⚙️ Workflow Run",
-                        "emoji": true
-                      },
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
+                    { "type": "button", "text": { "type": "plain_text", "text": "📦 npm", "emoji": true }, "url": "https://www.npmjs.com/package/@stackra/ts-redis/v/${{ needs.validate.outputs.version }}" },
+                    { "type": "button", "text": { "type": "plain_text", "text": "🏷️ GitHub Release", "emoji": true }, "url": "https://github.com/stackra-co/ts-redis/releases/tag/${{ needs.validate.outputs.tag }}" },
+                    { "type": "button", "text": { "type": "plain_text", "text": "📝 Full Changelog", "emoji": true }, "url": "https://github.com/stackra-co/ts-redis/blob/main/CHANGELOG.md" },
+                    { "type": "button", "text": { "type": "plain_text", "text": "⚙️ Workflow Run", "emoji": true }, "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" }
                   ]
                 },
                 {
                   "type": "context",
                   "elements": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "Triggered by *${{ github.actor }}* · Commit `${{ steps.notes.outputs.short_sha }}` · <https://github.com/stackra-co/ts-redis/compare/${{ steps.notes.outputs.prev_tag }}...${{ needs.validate.outputs.tag }}|Compare changes>"
-                    }
+                    { "type": "mrkdwn", "text": "Triggered by *${{ github.actor }}* · Commit `${{ steps.notes.outputs.short_sha }}` · <https://github.com/stackra-co/ts-redis/compare/${{ steps.notes.outputs.prev_tag }}...${{ needs.validate.outputs.tag }}|Compare changes>" }
                   ]
                 }
               ]
@@ -412,67 +354,29 @@ jobs:
               "blocks": [
                 {
                   "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "❌ Publish Failed: @stackra/ts-redis ${{ needs.validate.outputs.tag }}",
-                    "emoji": true
-                  }
+                  "text": { "type": "plain_text", "text": "❌ Publish Failed: @stackra/ts-redis ${{ needs.validate.outputs.tag }}", "emoji": true }
                 },
                 {
                   "type": "section",
                   "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*npm publish:*\n${{ needs.publish.result == 'failure' && '❌ Failed' || '✅ OK' }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*GitHub Release:*\n${{ needs.release.result == 'failure' && '❌ Failed' || '✅ OK' }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Version:*\n`${{ needs.validate.outputs.version }}`"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Tag:*\n`${{ needs.validate.outputs.tag }}`"
-                    }
+                    { "type": "mrkdwn", "text": "*npm publish:*\n${{ needs.publish.result == 'failure' && '❌ Failed' || '✅ OK' }}" },
+                    { "type": "mrkdwn", "text": "*GitHub Release:*\n${{ needs.release.result == 'failure' && '❌ Failed' || '✅ OK' }}" },
+                    { "type": "mrkdwn", "text": "*Version:*\n`${{ needs.validate.outputs.version }}`" },
+                    { "type": "mrkdwn", "text": "*Tag:*\n`${{ needs.validate.outputs.tag }}`" }
                   ]
                 },
-                {
-                  "type": "divider"
-                },
+                { "type": "divider" },
                 {
                   "type": "actions",
                   "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "🔍 View Logs",
-                        "emoji": true
-                      },
-                      "style": "danger",
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "🔄 Re-run Workflow",
-                        "emoji": true
-                      },
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
+                    { "type": "button", "text": { "type": "plain_text", "text": "🔍 View Logs", "emoji": true }, "style": "danger", "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" },
+                    { "type": "button", "text": { "type": "plain_text", "text": "🔄 Re-run Workflow", "emoji": true }, "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" }
                   ]
                 },
                 {
                   "type": "context",
                   "elements": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "Triggered by *${{ github.actor }}* · Commit `${{ steps.notes.outputs.short_sha }}`"
-                    }
+                    { "type": "mrkdwn", "text": "Triggered by *${{ github.actor }}* · Commit `${{ steps.notes.outputs.short_sha }}`" }
                   ]
                 }
               ]

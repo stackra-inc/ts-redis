@@ -34,6 +34,6 @@ import type { RedisConnection } from '@/interfaces';
  * ```
  */
 export function useRedisConnection(name?: string): Promise<RedisConnection> {
-  const redis = useInject(RedisManager);
+  const redis = useInject(RedisManager as any);
   return redis.connection(name);
 }

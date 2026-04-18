@@ -44,11 +44,11 @@ export class RedisModule {
       global: config.isGlobal ?? true,
       providers: [
         { provide: REDIS_CONFIG, useValue: config },
-        { provide: RedisManager, useClass: RedisManager },
-        { provide: REDIS_MANAGER, useExisting: RedisManager },
+        { provide: RedisManager as any, useClass: RedisManager as any },
+        { provide: REDIS_MANAGER, useExisting: RedisManager as any },
         { provide: REDIS_CONNECTOR, useClass: UpstashConnector },
       ],
-      exports: [RedisManager, REDIS_MANAGER],
+      exports: [RedisManager as any, REDIS_MANAGER],
     };
   }
 }
