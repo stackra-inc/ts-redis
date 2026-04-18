@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "SVG to PNG Banner",
+  "description": "Regenerates .github/assets/banner.png from banner.svg when the SVG file is saved.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.svg"
+    ]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "npx -y sharp-cli --input .github/assets/banner.svg --output .github/assets/banner.png"
+  }
+}
