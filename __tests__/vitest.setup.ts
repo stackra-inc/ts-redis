@@ -2,16 +2,8 @@
  * @fileoverview Vitest setup file for @stackra/ts-redis package
  *
  * This file configures the testing environment before running tests.
- * It mocks DI decorators so tests can run without the full IoC container.
- *
- * Setup Features:
- * - Mocks @Injectable() decorator to pass-through the class unchanged
- * - Mocks @Inject() decorator to no-op (no actual injection in tests)
- * - Mocks @Optional() decorator to no-op
- * - Mocks @Module() decorator to pass-through the class unchanged
- *
- * This allows testing service logic in isolation without bootstrapping
- * the entire DI container.
+ * It mocks DI decorators and support classes so tests can run without
+ * the full IoC container or @stackra/ts-support installed.
  *
  * @module @stackra/ts-redis
  * @category Configuration
@@ -27,27 +19,107 @@ import { vi } from 'vitest';
  * - Constructor parameters decorated with @Inject() are ignored
  * - @Optional() parameters are ignored
  * - @Module() metadata is ignored
- *
- * This ensures decorator metadata doesn't interfere with tests
- * and allows testing module behavior in isolation.
  */
-vi.mock('@stackra/ts-container', async () => {
-  // Import the actual module to preserve non-decorator exports
-  const actual = await vi.importActual('@stackra/ts-container');
+vi.mock('@stackra/ts-container', () => ({
+  Injectable:
+    () =>
+    (target: unknown): unknown =>
+      target,
+  Inject:
+    () =>
+    (_target: unknown, _key: string | symbol, _index: number): void => {},
+  Optional:
+    () =>
+    (_target: unknown, _key: string | symbol, _index: number): void => {},
+  Module:
+    () =>
+    (target: unknown): unknown =>
+      target,
+}));
 
-  return {
-    ...actual,
+/**
+ * Mock @stackra/ts-support — provides a stub MultipleInstanceManager
+ * so RedisManager can extend it without the real package installed.
+ *
+ * The stub stores instances in a Map and exposes the methods that
+ * RedisManager calls: instanceAsync, hasInstance, instance,
+ * forgetInstance, getResolvedInstances, and purge.
+ */
+vi.mock('@stackra/ts-support', () => {
+  class MultipleInstanceManager<T> {
+    private _instances = new Map<string, T>();
+    private _pending = new Map<string, Promise<T>>();
 
-    // @Injectable() — returns the class unchanged (no container registration)
-    Injectable: () => (target: any) => target,
+    protected getDefaultInstance(): string {
+      return '';
+    }
 
-    // @Inject(TOKEN) — no-op (no actual parameter injection)
-    Inject: () => (_target: any, _propertyKey: string, _parameterIndex: number) => {},
+    protected getInstanceConfig(_name: string): Record<string, unknown> | undefined {
+      return undefined;
+    }
 
-    // @Optional() — no-op (no optional injection handling)
-    Optional: () => (_target: any, _propertyKey: string, _parameterIndex: number) => {},
+    protected createDriver(_driver: string, _config: Record<string, unknown>): T {
+      throw new Error('Not implemented');
+    }
 
-    // @Module(metadata) — returns the class unchanged (no module registration)
-    Module: (_metadata: any) => (target: any) => target,
-  };
+    protected async createDriverAsync(
+      _driver: string,
+      _config: Record<string, unknown>,
+    ): Promise<T> {
+      throw new Error('Not implemented');
+    }
+
+    protected async instanceAsync(name?: string): Promise<T> {
+      const key = name ?? this.getDefaultInstance();
+      if (this._instances.has(key)) {
+        return this._instances.get(key) as T;
+      }
+      if (this._pending.has(key)) {
+        return this._pending.get(key) as Promise<T>;
+      }
+      const config = this.getInstanceConfig(key);
+      if (!config) {
+        throw new Error(`Redis connection [${key}] not configured`);
+      }
+      const promise = this.createDriverAsync(config.driver as string, config).then((inst) => {
+        this._instances.set(key, inst);
+        this._pending.delete(key);
+        return inst;
+      });
+      this._pending.set(key, promise);
+      return promise;
+    }
+
+    protected instance(name: string): T {
+      return this._instances.get(name) as T;
+    }
+
+    protected hasInstance(name: string): boolean {
+      return this._instances.has(name);
+    }
+
+    protected forgetInstance(name: string): void {
+      this._instances.delete(name);
+    }
+
+    protected getResolvedInstances(): string[] {
+      return Array.from(this._instances.keys());
+    }
+
+    protected purge(): void {
+      this._instances.clear();
+    }
+  }
+
+  class Facade {
+    static make<T>(_token: unknown): T {
+      return {} as T;
+    }
+
+    static setApplication(): void {}
+    static swap(): void {}
+    static clearResolvedInstances(): void {}
+  }
+
+  return { MultipleInstanceManager, Facade };
 });
