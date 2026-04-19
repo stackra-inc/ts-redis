@@ -6,10 +6,10 @@
 #   - Manual workflow_dispatch with optional dry-run
 #
 # Required secrets:
-#   NPM_TOKEN          — npm automation token (Granular: read+write packages)
+#   STACKTRA_NPM_TOKEN          — npm automation token (Granular: read+write packages)
 #
 # Optional secrets (Slack notification):
-#   SLACK_WEBHOOK_URL  — Incoming Webhook URL for release announcements
+#   STACKTRA_SLACK_WEBHOOK_URL  — Incoming Webhook URL for release announcements
 #
 # Flow:
 #   validate ──► quality ──► publish ──► release ──► notify (optional)
@@ -17,7 +17,7 @@
 # Notes:
 #   - npm provenance is enabled (--provenance) for supply-chain transparency
 #   - GitHub Release is created automatically from CHANGELOG.md
-#   - Slack message is skipped if SLACK_WEBHOOK_URL secret is not set
+#   - Slack message is skipped if STACKTRA_SLACK_WEBHOOK_URL secret is not set
 # =============================================================================
 
 name: Publish
@@ -147,7 +147,7 @@ jobs:
       - name: 🚀 Publish
         run: pnpm publish --access public --no-git-checks --provenance
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.STACKTRA_NPM_TOKEN }}
 
   # ---------------------------------------------------------------------------
   # Create GitHub Release
@@ -189,7 +189,7 @@ jobs:
           make_latest: ${{ needs.validate.outputs.is_prerelease == 'false' }}
 
   # ---------------------------------------------------------------------------
-  # Slack notification (optional — skipped if SLACK_WEBHOOK_URL not set)
+  # Slack notification (optional — skipped if STACKTRA_SLACK_WEBHOOK_URL not set)
   # ---------------------------------------------------------------------------
   notify:
     name: 💬 Slack Notification
@@ -207,11 +207,11 @@ jobs:
       - name: 🔍 Check if Slack webhook is configured
         id: check
         run: |
-          if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
+          if [ -n "${{ secrets.STACKTRA_SLACK_WEBHOOK_URL }}" ]; then
             echo "configured=true" >> $GITHUB_OUTPUT
           else
             echo "configured=false" >> $GITHUB_OUTPUT
-            echo "ℹ️ SLACK_WEBHOOK_URL not set — skipping Slack notification"
+            echo "ℹ️ STACKTRA_SLACK_WEBHOOK_URL not set — skipping Slack notification"
           fi
 
       - name: 📝 Extract release notes & metadata
@@ -292,7 +292,7 @@ jobs:
           needs.release.result == 'success'
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook: ${{ secrets.STACKTRA_SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
@@ -346,7 +346,7 @@ jobs:
           (needs.publish.result == 'failure' || needs.release.result == 'failure')
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook: ${{ secrets.STACKTRA_SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {

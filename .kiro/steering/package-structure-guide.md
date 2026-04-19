@@ -658,7 +658,7 @@ jobs:
 # Triggered by tags matching the pattern v* (e.g., v1.0.0, v1.2.3)
 #
 # Requirements:
-# - NPM_TOKEN secret must be configured in repository settings
+# - STACKTRA_NPM_TOKEN secret must be configured in repository settings
 # - Package version in package.json must match the tag version
 #
 # Process:
@@ -714,7 +714,7 @@ jobs:
           cd packages/container
           npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.STACKTRA_NPM_TOKEN }}
 ```
 
 **Key Points:**
@@ -724,7 +724,7 @@ jobs:
 - Setup pnpm before Node.js
 - Enable pnpm caching with `cache: 'pnpm'`
 - Publish from specific package directory
-- Publish workflow requires `NPM_TOKEN` secret in repository settings
+- Publish workflow requires `STACKTRA_NPM_TOKEN` secret in repository settings
 - Always use `--access public` for scoped packages
 
 ---
