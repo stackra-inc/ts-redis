@@ -74,7 +74,7 @@
     "@stackra/ts-logger": "github:stackra-inc/ts-logger#main",
     "@stackra/ts-support": "github:stackra-inc/ts-support#main",
     "@stackra/typescript-config": "^1.0.12",
-    "jiti": "catalog:build",
+    "jiti": "^2.7.0",
     "react": "^19.2.6",
     "vite": "^8.0.13"
   }
