@@ -38,7 +38,6 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@stackra/contracts": "github:stackra-inc/contracts#main",
     "@upstash/redis": "^1.38.0"
   },
   "peerDependencies": {
@@ -47,7 +46,8 @@
     "@stackra/ts-container": "*",
     "@stackra/ts-logger": "*",
     "@stackra/ts-support": "*",
-    "react": "^19.2.6"
+    "react": "^19.2.6",
+    "@stackra/contracts": "*"
   },
   "peerDependenciesMeta": {
     "@stackra/ts-cache": {
